@@ -82,27 +82,27 @@ echo "screenfetch" >> .bash_profile
 
 # install webserver
 cd
-wget -O /etc/nginx/nginx.conf "https://raw.githubusercontent.com/adammau2/script-vps/master/conf/nginx.conf"
+wget -O /etc/nginx/nginx.conf "https://raw.githubusercontent.com/mattieharms/script-vps/master/conf/nginx.conf"
 sed -i 's/www-data/nginx/g' /etc/nginx/nginx.conf
 mkdir -p /home/vps/public_html
 echo "<pre>Setup by Adam M</pre>" > /home/vps/public_html/index.html
 echo "<?php phpinfo(); ?>" > /home/vps/public_html/info.php
 rm /etc/nginx/conf.d/*
-wget -O /etc/nginx/conf.d/vps.conf "https://raw.githubusercontent.com/adammau2/script-vps/master/conf/vps.conf"
+wget -O /etc/nginx/conf.d/vps.conf "https://raw.githubusercontent.com/mattieharms/script-vps/master/conf/vps.conf"
 sed -i 's/apache/nginx/g' /etc/php-fpm.d/www.conf
 chmod -R +rx /home/vps
 service php-fpm restart
 service nginx restart
 
 # install openvpn
-wget -O /etc/openvpn/openvpn.tar "https://raw.githubusercontent.com/adammau2/script-vps/master/conf/openvpn-debian.tar"
+wget -O /etc/openvpn/openvpn.tar "https://raw.githubusercontent.com/mattieharms/script-vps/master/conf/openvpn-debian.tar"
 cd /etc/openvpn/
 tar xf openvpn.tar
-wget -O /etc/openvpn/1194.conf "https://raw.githubusercontent.com/adammau2/script-vps/master/conf/1194-centos.conf"
+wget -O /etc/openvpn/1194.conf "https://raw.githubusercontent.com/mattieharms/script-vps/master/conf/1194-centos.conf"
 if [ "$OS" == "x86_64" ]; then
-  wget -O /etc/openvpn/1194.conf "https://raw.githubusercontent.com/adammau2/script-vps/master/conf/1194-centos64.conf"
+  wget -O /etc/openvpn/1194.conf "https://raw.githubusercontent.com/mattieharms/script-vps/master/conf/1194-centos64.conf"
 fi
-wget -O /etc/iptables.up.rules "https://raw.githubusercontent.com/adammau2/script-vps/master/conf/iptables.up.rules"
+wget -O /etc/iptables.up.rules "https://raw.githubusercontent.com/mattieharms/script-vps/master/conf/iptables.up.rules"
 sed -i '$ i\iptables-restore < /etc/iptables.up.rules' /etc/rc.local
 sed -i '$ i\iptables-restore < /etc/iptables.up.rules' /etc/rc.d/rc.local
 MYIP=`curl icanhazip.com`;
@@ -118,12 +118,12 @@ cd
 
 # configure openvpn client config
 cd /etc/openvpn/
-wget -O /etc/openvpn/1194-client.ovpn "https://raw.githubusercontent.com/adammau2/script-vps/master/openvpn.conf"
+wget -O /etc/openvpn/1194-client.ovpn "https://raw.githubusercontent.com/mattieharms/script-vps/master/openvpn.conf"
 sed -i $MYIP2 /etc/openvpn/1194-client.ovpn;
 PASS=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 15 | head -n 1`;
 useradd -M -s /bin/false Adam
-echo "Adam:$PASS" | chpasswd
-echo "Adam" > pass.txt
+echo "InsomNet4u:$PASS" | chpasswd
+echo "InsomNet4u" > pass.txt
 echo "$PASS" >> pass.txt
 tar cf client.tar 1194-client.ovpn pass.txt
 cp client.tar /home/vps/public_html/
@@ -131,9 +131,9 @@ cp 1194-client.ovpn /home/vps/public_html/
 
 # install badvpn
 cd
-wget -O /usr/bin/badvpn-udpgw "https://raw.githubusercontent.com/adammau2/script-vps/master/conf/badvpn-udpgw"
+wget -O /usr/bin/badvpn-udpgw "https://raw.githubusercontent.com/mattieharms/script-vps/master/conf/badvpn-udpgw"
 if [ "$OS" == "x86_64" ]; then
-  wget -O /usr/bin/badvpn-udpgw "https://raw.githubusercontent.com/adammau2/script-vps/master/conf/badvpn-udpgw64"
+  wget -O /usr/bin/badvpn-udpgw "https://raw.githubusercontent.com/mattieharms/script-vps/master/conf/badvpn-udpgw64"
 fi
 sed -i '$ i\screen -AmdS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300' /etc/rc.local
 sed -i '$ i\screen -AmdS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300' /etc/rc.d/rc.local
@@ -142,8 +142,8 @@ screen -AmdS badvpn badvpn-udpgw --listen-addr 127.0.0.1:7300
 
 # install mrtg
 cd /etc/snmp/
-wget -O /etc/snmp/snmpd.conf "https://raw.githubusercontent.com/adammau2/script-vps/master/conf/snmpd.conf"
-wget -O /root/mrtg-mem.sh "https://raw.githubusercontent.com/adammau2/script-vps/master/conf/mrtg-mem.sh"
+wget -O /etc/snmp/snmpd.conf "https://raw.githubusercontent.com/mattieharms/script-vps/master/conf/snmpd.conf"
+wget -O /root/mrtg-mem.sh "https://raw.githubusercontent.com/mattieharms/script-vps/master/conf/mrtg-mem.sh"
 chmod +x /root/mrtg-mem.sh
 service snmpd restart
 chkconfig snmpd on
@@ -193,7 +193,7 @@ chkconfig fail2ban on
 
 # install squid
 yum -y install squid
-wget -O /etc/squid/squid.conf "https://raw.githubusercontent.com/adammau2/script-vps/master/conf/squid-centos.conf"
+wget -O /etc/squid/squid.conf "https://raw.githubusercontent.com/mattieharms/script-vps/master/conf/squid-centos.conf"
 sed -i $MYIP2 /etc/squid/squid.conf;
 service squid restart
 chkconfig squid on
@@ -208,9 +208,9 @@ chkconfig webmin on
 
 # pasang bmon
 if [ "$OS" == "x86_64" ]; then
-  wget -O /usr/bin/bmon "https://raw.githubusercontent.com/adammau2/script-vps/master/conf/bmon64"
+  wget -O /usr/bin/bmon "https://raw.githubusercontent.com/mattieharms/script-vps/master/conf/bmon64"
 else
-  wget -O /usr/bin/bmon "https://raw.githubusercontent.com/adammau2/script-vps/master/conf/bmon"
+  wget -O /usr/bin/bmon "https://raw.githubusercontent.com/mattieharms/script-vps/master/conf/bmon"
 fi
 chmod +x /usr/bin/bmon
 
@@ -219,13 +219,13 @@ cd /usr/bin
 wget -O speedtest "https://raw.githubusercontent.com/adammau2/script-vps/master/speedtest_cli.py"
 wget -O bench "https://raw.githubusercontent.com/adammau2/script-vps/master/bench-network.sh"
 wget -O mem "https://raw.githubusercontent.com/adammau2/script-vps/master/ps_mem.py"
-wget -O loginuser "https://raw.githubusercontent.com/adammau2/script-vps/master/login.sh"
-wget -O userlogin "https://raw.githubusercontent.com/adammau2/script-vps/master/user-login.sh"
-wget -O userexpire "https://raw.githubusercontent.com/adammau2/script-vps/master/autoexpire.sh"
-wget -O usernew "https://raw.githubusercontent.com/adammau2/script-vps/master/create-user.sh"
-wget -O renew "https://raw.githubusercontent.com/adammau2/script-vps/master/user-renew.sh"
-wget -O userlist "https://raw.githubusercontent.com/adammau2/script-vps/master/user-list.sh" 
-wget -O trial "https://raw.githubusercontent.com/adammau2/script-vps/master/user-trial.sh"
+wget -O loginuser "https://raw.githubusercontent.com/mattieharms/script-vps/master/login.sh"
+wget -O userlogin "https://raw.githubusercontent.com/mattieharms/script-vps/master/user-login.sh"
+wget -O userexpire "https://raw.githubusercontent.com/mattieharms/script-vps/master/autoexpire.sh"
+wget -O usernew "https://raw.githubusercontent.com/mattieharms/script-vps/master/create-user.sh"
+wget -O renew "https://raw.githubusercontent.com/mattieharms/script-vps/master/user-renew.sh"
+wget -O userlist "https://raw.githubusercontent.com/mattieharms/script-vps/master/user-list.sh" 
+wget -O trial "https://raw.githubusercontent.com/mattieharms/script-vps/master/user-trial.sh"
 echo "cat log-install.txt" | tee info
 echo "python /usr/bin/speedtest.py --share" | tee speedtest
 wget -O speedtest "https://raw.githubusercontent.com/adammau2/script-vps/master/speedtest_cli.py"
@@ -278,7 +278,7 @@ echo "Layanan yang diaktifkan"  | tee -a log-install.txt
 echo "--------------------------------------"  | tee -a log-install.txt
 echo "OpenVPN : TCP 1194 (client config : http://$MYIP:81/1194-client.ovpn)"  | tee -a log-install.txt
 echo "Port OpenSSH : 22, 143"  | tee -a log-install.txt
-echo "Port Dropbear : 109, 110, 443"  | tee -a log-install.txt
+echo "Port Dropbear : 110, 443, 80, 1987, 2017, 22507"  | tee -a log-install.txt
 echo "SquidProxy    : 80, 8080 (limit to IP SSH)"  | tee -a log-install.txt
 echo "badvpn   : badvpn-udpgw port 7300"  | tee -a log-install.txt
 echo "Webmin   : http://$MYIP:10000/"  | tee -a log-install.txt
@@ -301,7 +301,7 @@ echo "" | tee -a log-install.txt
 
 echo "Account Default (utk SSH dan VPN)"  | tee -a log-install.txt
 echo "---------------"  | tee -a log-install.txt
-echo "User     : Adam"  | tee -a log-install.txt
+echo "User     : InsomNet4u"  | tee -a log-install.txt
 echo "Password : $PASS"  | tee -a log-install.txt
 echo "" | tee -a log-install.txt
 
